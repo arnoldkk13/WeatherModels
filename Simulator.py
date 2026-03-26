@@ -22,7 +22,7 @@ class Simulator:
 	"""
 
 	"""
-	def run_simulation(self, dt=1e-4):
+	def run_simulation(self, dt=1e-4, sample_dt=0.01):
 		accepted_steps = 0
 		times = []
   
@@ -75,6 +75,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--method", type=str, default="DormandPrince45")
 	parser.add_argument("--dt", type=float)
+	parser.add_argument("--sample_dt", type=float, default=.01) # For visualization purposes we can tweak the update frequency on the graph
 	parser.add_argument("--timesteps", type=int, default=10000)
 	parser.add_argument("--seconds", type=float) # We can either use seconds or total timesteps
 	parser.add_argument("--x", type=float, default=0.0)
@@ -82,6 +83,7 @@ if __name__ == "__main__":
 	parser.add_argument("--z", type=float, default=0.0)
 	parser.add_argument("--visualize", action="store_true", required=False)
 	parser.add_argument("--animate", action="store_true", required=False)
+	parser.add_argument("--interval", type=int, default=5) # Stores the animation interval time
 
 	args = parser.parse_args()
  
@@ -117,9 +119,9 @@ if __name__ == "__main__":
 		print(f"Running simulation for {args.seconds} seconds.\n")
 	
 	if dt is not None:
-		steps, time, trajectory = simulation.run_simulation(dt=args.dt)
+		steps, time, trajectory = simulation.run_simulation(dt=args.dt, sample_dt=args.sample_dt)
 	else: 
-		steps, time, trajectory = simulation.run_simulation()
+		steps, time, trajectory = simulation.run_simulation(sample_dt=args.sample_dt)
 	
 	# Visualize the simulation if the flag is used
 	print(f"Visualizing the simulation.\n")
@@ -132,4 +134,4 @@ if __name__ == "__main__":
 	print(f"Animating the simulation.\n")
 	if args.animate:
 		animator = Animate()
-		animator.animate(steps, time, trajectory, args.method, dt)
+		animator.animate(steps, time, trajectory, args.method, args.sample_dt, args.interval)
