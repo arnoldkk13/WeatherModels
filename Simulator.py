@@ -7,6 +7,7 @@ from NumericalMethods import ForwardEuler
 from LorenzAttractor import LorenzAttractor
 from RosslerAttractor import RosslerAttractor
 from ChuaCircuit import ChuaCircuit
+from AizawaAttractor import AizawaAttractor
 
 from Visualizations import Visualize
 from Visualizations import Animate
@@ -34,7 +35,7 @@ class Simulator:
   
 		self.total_time = 0.0
 		next_sample_time = 0.0
-		next_percent_to_print = 10 # First print at 10%
+		next_percent_to_print = 5 # First print at 10%
 		not_accepted_counter = 0
 		max_retries = 20
   
@@ -131,6 +132,8 @@ if __name__ == "__main__":
 		system = RosslerAttractor(initial_state=[args.x, args.y, args.z])
 	elif args.system == "ChuaCircuit":
 		system = ChuaCircuit(initial_state=[args.x, args.y, args.z])
+	elif args.system == "AizawaAttractor":
+		system = AizawaAttractor(initial_state=[args.x, args.y, args.z])
 	else:
 		print("Incorrect system used. Exitting")
 		exit(1)

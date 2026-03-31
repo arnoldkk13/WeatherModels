@@ -29,6 +29,8 @@ class Visualize:
 			ax.set_title(f"Rossler Attractor using {method_name} method")
 		elif system == "ChuaCircuit":
 			ax.set_title(f"Chua's Circuit using {method_name} method")
+		elif system == "AizawaAttractor":
+			ax.set_title(f"Aizawa Attractor using {method_name} method")
 		plt.legend()
 		
 		plt.show()
