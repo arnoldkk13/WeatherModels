@@ -5,17 +5,17 @@ for the purpose of understanding Chaotic Systems.
 Commands to run each chaotic system to generate the images found in the images folder:
 Lorenz Attractor:
  
-    __python3 Simulator.py --system LorenzAttractor --seconds 200 --x 5.0 --y 5.0 --z 5.0 --visualize --animate__
+    python3 Simulator.py --system LorenzAttractor --seconds 200 --x 5.0 --y 5.0 --z 5.0 --visualize --animate
     
 Rossler Attractor:
 
-    __python3 Simulator.py --system RosslerAttractor --seconds 1000 --visualize --animate__
-    
+    python3 Simulator.py --system RosslerAttractor --seconds 1000 --visualize --animate
+   
 Chua's Circuit:
 
-    __python3 Simulator.py --system ChuaCircuit --seconds 1000 --x 0.0 --y 0.0 --z 1.0 --visualize --animate__
+    python3 Simulator.py --system ChuaCircuit --seconds 1000 --x 0.0 --y 0.0 --z 1.0 --visualize --animate
     
 Aizawa Attractor: 
 
-    __python3 Simulator.py --system AizawaAttractor --x .1 --y 0.0 --z 0.0 --seconds 1000 --visualize --animate__
+    python3 Simulator.py --system AizawaAttractor --x .1 --y 0.0 --z 0.0 --seconds 1000 --visualize --animate
 
