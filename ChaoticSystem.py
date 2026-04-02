@@ -22,11 +22,20 @@ class ChaoticSystem(ABC):
 	# passed into initial_state or as separate params here
 	def initial_conditions(self, x, y, z):
 		print(f"Setting Initial Conditions: x={x}, y={y}, z={z}")
-		self.state = [x, y, z] # Set the state
+		self.state =np.array([x, y, z], dtype=float) # Set the state
 		self.trajectory = [self.state.copy()]
 	
 	def get_state(self):
-		return self.state
+		return self.state.copy()
+
+	"""
+	Sets the current state of the system manually.
+	This is primarily used in lyapunov computations for 
+	normalization
+ 	"""
+	def set_state(self, state):
+		self.state = np.array(state, dtype=float)
+  
 
 	"""
 	Appends the current state to the trajectory.
@@ -41,4 +50,8 @@ class ChaoticSystem(ABC):
 	"""
 	@abstractmethod
 	def compute_derivatives(self, state, t=None):
+		pass
+
+	@abstractmethod
+	def jacobian(self, state):
 		pass

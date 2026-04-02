@@ -84,9 +84,10 @@ our adaptive timestep, which is defined in this class.
 This uses the strategy design pattern to select methods.
 """
 class RungeKutta:
-	def __init__(self, method):
+	def __init__(self, method, adaptive=True):
 		
 		self.method = method()
+		self.adaptive = adaptive
 	"""
 	Uses an adaptive step distance based on the error and tolerance we achieve from
 	the embedded method. We define some sanity checks such as a minimum timestep of 1e-8 
@@ -124,7 +125,6 @@ class RungeKutta:
 	"""
 	def step(self, system, dt, tol=1e-3):
 		A = self.method.A
-		C = self.method.C
 		b_high = self.method.b_high
 		b_low = self.method.b_low
 		stages = self.method.stages
@@ -154,15 +154,62 @@ class RungeKutta:
 
 		error = np.sqrt(np.mean(((y_high - y_low) / scale) ** 2))
   
-		dt_min = 1e-8
-		if dt <= dt_min and error >= 1.0:
-			# Force accept to break infinite loop
+		### Fixed timestep ###
+		if not self.adaptive:
 			system.state = y_high
-			return dt_new, True
+			return dt, True # dt is unchanged, and we always accept the step
 
-		dt_new = self.adaptive_step(dt, error, order, tol)
-		if error < 1.0:
-			system.state = y_high
-			return dt_new, True
+		### Adaptive timestep ###
 		else:
-			return dt_new, False
+			dt_new = self.adaptive_step(dt, error, order, tol)
+			
+			dt_min = 1e-8
+			if dt <= dt_min and error >= 1.0:
+				# Force accept to break infinite loop
+				system.state = y_high
+				return dt_new, True
+
+			# Update based on if we use an adaptive step or not
+			if error < 1.0:
+				system.state = y_high
+				return dt_new, True
+			else:
+				return dt_new, False
+
+	"""
+	
+	"""
+	def step(self, f, state, dt, tol=1e-3):
+		A = self.method.A
+		b_high = self.method.b_high
+		b_low = self.method.b_low
+		stages = self.method.stages
+		order = self.method.order
+
+		k = [None] * stages
+
+		for i in range(stages):
+			y_temp = state.copy()
+
+			for j in range(i):
+				y_temp += dt * A[i][j] * k[j]
+
+			k[i] = k[i] = f(y_temp)
+
+		y_high = state.copy()
+		y_low  = state.copy()
+
+		for i in range(stages):
+			y_high += dt * b_high[i] * k[i]
+			y_low  += dt * b_low[i]  * k[i]
+
+		atol = 1e-6
+		rtol = tol 
+
+		scale = atol + rtol * np.maximum(np.abs(y_high), np.abs(state))
+
+  
+		### Fixed timestep always runs here ###
+		
+		state = y_high
+		return state 

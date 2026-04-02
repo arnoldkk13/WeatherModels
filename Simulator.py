@@ -114,6 +114,7 @@ if __name__ == "__main__":
 	parser.add_argument("--dt", type=float)
 	parser.add_argument("--sample_dt", type=float, default=.01) # For visualization purposes we can tweak the update frequency on the graph
 	parser.add_argument("--tol", type=float, default=1e-4) # Tweak the tolerance for different chaotic systems
+	parser.add_argument("--fixed", action='store_true', required=False) # Fixes the timestep for RK methods, with no adaptive logic
 	parser.add_argument("--timesteps", type=int, default=10000)
 	parser.add_argument("--seconds", type=float) # We can either use seconds or total timesteps
 	parser.add_argument("--x", type=float, default=0.0)
@@ -122,6 +123,7 @@ if __name__ == "__main__":
 	parser.add_argument("--visualize", action="store_true", required=False)
 	parser.add_argument("--animate", action="store_true", required=False)
 	parser.add_argument("--update_method", type=str, default="linear")
+	parser.add_argument("--save", action='store_true', required=False)
 
 	args = parser.parse_args()
 
@@ -151,8 +153,9 @@ if __name__ == "__main__":
 		solver = ForwardEuler()
 		print(f"Using steplength {dt}")
 	else:
+		adaptive = not args.fixed
 		method_class = METHODS[args.method]
-		solver = RungeKutta(method_class)
+		solver = RungeKutta(method_class, adaptive)
 		print(f"Using variable steplength")
   
 	# Setup simulation object
@@ -181,4 +184,4 @@ if __name__ == "__main__":
 	if args.animate:
 		print(f"Animating the simulation.\n")
 		animator = Animate()
-		animator.animate(steps, time, trajectory, args.method, args.sample_dt, args.system, args.update_method)
+		animator.animate(steps=steps, time=time, trajectory=trajectory, method_name=args.method, sample_dt=args.sample_dt, system=args.system, update_method=args.update_method, save=args.save)

@@ -40,4 +40,13 @@ class LorenzAttractor(ChaoticSystem):
 		dy = x * (self.ρ - z) - y
 		dz = x * y - self.β * z
 
-		return np.array([dx, dy, dz])
+		return np.array([dx, dy, dz])	
+
+	def jacobian(self, state):
+		x, y, z = state
+		J = np.array([
+		[-self.σ, self.σ, 0],
+		[self.ρ - z, -1, -x],
+		[y, x, -self.β]
+		])
+		return J
