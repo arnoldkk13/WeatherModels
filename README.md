@@ -20,5 +20,6 @@ Aizawa Attractor:
     python3 Simulator.py --system AizawaAttractor --x .1 --y 0.0 --z 0.0 --seconds 1000 --visualize --animate
 
 Lyapunov Exponents Calculation:
+    
     python3 Lyapunov.py 
 
