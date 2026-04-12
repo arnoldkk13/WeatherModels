@@ -184,4 +184,4 @@ if __name__ == "__main__":
 	if args.animate:
 		print(f"Animating the simulation.\n")
 		animator = Animate()
-		animator.animate(steps=steps, times=time, trajectory=trajectory, method_name=args.method, sample_dt=args.sample_dt, system=args.system, update_method=args.update_method, save=args.save)
+		animator.animate(steps=steps, times=time, trajectory=trajectory, method_name=args.method, sample_dt=args.sample_dt, system=args.system, update_method=args.update_method, save=args.save, ro=system.ρ)

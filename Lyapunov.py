@@ -103,10 +103,14 @@ class Lyapunov():
 		λs = np.zeros(3)
 		log_sums = np.zeros(3)
 		# Gives the identity matrix with epsilon in the rows
-		Q = np.eye(3) * ε
+		Q = np.eye(3)
   
 		state = np.concatenate([system.state, Q.flatten()])
-
+		# Evolve system onto attractor first
+		TRANSIENT = 20  # seconds
+		for _ in range(round(TRANSIENT / dt)):
+			state = solver.step_alt(combined_dynamics, state, dt)
+		
 		next_percent_to_print = 5 # First print at 5%
 
 		total_time = 0
@@ -139,13 +143,30 @@ class Lyapunov():
    
 		λs = log_sums / total_time
   
+
+  
 		print(f"\n__Lyapunov Exponents__")
 		for i, λ in enumerate(λs):
 			print(f"λ{i}: {λ}")
    
 		# Compute Kaplan Yorke dimension
-		kaplan_yorke = 2 + (λs[0] / np.abs(λs[2]))
-		print(f"\nKaplan Yorke dimension: {kaplan_yorke}")
+		# Sort exponents descending
+		sorted_indices = np.argsort(λs)[::-1]
+		λs = λs[sorted_indices]
+
+		# Find j: largest index where cumulative sum >= 0
+		cumsum = np.cumsum(λs)
+		valid = np.where(cumsum >= 0)[0]
+
+		if len(valid) == 0:
+			kaplan_yorke = 0.0
+		else:
+			j = valid[-1]
+			if j + 1 < len(λs):
+				kaplan_yorke = (j + 1) + cumsum[j] / np.abs(λs[j + 1])
+			else:
+				kaplan_yorke = float(len(λs))  # All exponents positive
+			print(f"\nKaplan Yorke dimension: {kaplan_yorke}")
 		return λs, kaplan_yorke
 
 

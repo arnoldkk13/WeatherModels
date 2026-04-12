@@ -8,7 +8,7 @@ class Animate:
 	"""
 	Animate will draw the trajectory from the passed in trajectory as frames. This takes in a 
 	"""
-	def animate(self, steps, times, trajectory, method_name, sample_dt, system, update_method='linear', duration=150, save=False):
+	def animate(self, steps, times, trajectory, method_name, sample_dt, system, update_method='linear', duration=150, save=False, ro=28):
 		import matplotlib 
 		if save:
 			matplotlib.use('Agg') 
@@ -56,7 +56,7 @@ class Animate:
 			"AizawaAttractor":  "Aizawa Attractor",
 		}
 		title = titles.get(system, system)
-		ax.set_title(f"{title} using {method_name} method")
+		ax.set_title(f"{title} using {method_name} method: ρ={ro}")
 		ax.set_xlabel("X")
 		ax.set_ylabel("Y")
 		ax.set_zlabel("Z")
@@ -131,6 +131,7 @@ class Visualize:
 
 		from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
+		# Plot 3D model
 		traject_arr = np.array(trajectory)
 		x, y, z = traject_arr[:, 0], traject_arr[:, 1], traject_arr[:, 2]
 		
@@ -167,13 +168,13 @@ class Visualize:
 		ax.set_zlabel("Z")
 		
 		if system == "LorenzAttractor":
-			ax.set_title(f"Lorenz Attractor using {method_name} method")
+			ax.set_title(f"Lorenz Attractor using {method_name}")
 		elif system == "RosslerAttractor":
-			ax.set_title(f"Rossler Attractor using {method_name} method")
+			ax.set_title(f"Rossler Attractor using {method_name}")
 		elif system == "ChuaCircuit":
-			ax.set_title(f"Chua's Circuit using {method_name} method")
+			ax.set_title(f"Chua's Circuit using {method_name}")
 		elif system == "AizawaAttractor":
-			ax.set_title(f"Aizawa Attractor using {method_name} method")
+			ax.set_title(f"Aizawa Attractor using {method_name}")
    
 		cbar = fig.colorbar(lc, ax=ax, pad=0.1)
 		cbar.set_label("Normalized Time")
@@ -181,4 +182,7 @@ class Visualize:
 		plt.legend()
 		
 		plt.show()
+  
+		# Plot Time series visualizations
+		
 		
